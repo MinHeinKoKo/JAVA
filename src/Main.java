@@ -16,6 +16,16 @@ public class Main {
 
     public static void main(String[] args) {
 
+        //colors
+//        ArrayList<String> colorLists = new ArrayList<>();
+//        colorLists.add("\033[0;31m");
+//        colorLists.add("\033[0;32m");
+//        colorLists.add("\033[0;33m");
+//        colorLists.add("\033[0;34m");
+//        colorLists.add("\033[0;35m");
+//        colorLists.add("\033[0;36m");
+//        colorLists.add("\033[0;37m");
+
 
         ArrayList<String> eventsName = new ArrayList<>();
         ArrayList<String> playerNames = new ArrayList<>();
@@ -32,13 +42,18 @@ public class Main {
         Scanner input = new Scanner(System.in);
 
         //display general for the system
+        System.out.print(GREEN);
         generalRules();
+        System.out.println(RESET);
         do{
             do {
                 //display menu and accept the one that user want to use
                 menu();
                 userChooseMenu = input.nextInt();
-            }while (userChooseMenu <= 0 || userChooseMenu >= 5);
+                if (userChooseMenu<=0 || userChooseMenu >=6){
+                    System.out.println(RED+"Please select one from our lists 😒😒"+ RESET);
+                }
+            }while (userChooseMenu <= 0 || userChooseMenu >= 6);
 
             //depending on user , do the process (1,2,3,4,5)
             switch (userChooseMenu){
@@ -48,6 +63,9 @@ public class Main {
                         do {
                             System.out.println( "Enter the no of teams Entering 5 events" );
                             teams = input.nextInt();
+                            if (teams<2 || teams >4){
+                                System.out.println(RED+"Please enter between 0 to 5 😒😒"+ RESET);
+                            }
                         }while (teams<2 || teams>4);
 
                         //accept the event's name
@@ -62,7 +80,7 @@ public class Main {
                             String teamN = input.next();
                             teamNames.add(teamN);
                             for (int j = 1 ; j<=events; j++ ){
-                                System.out.println("Enter Participant name " + j + " for team " + teamNames.get(i-1) +" for the event : " + eventsName.get(j-1));
+                                System.out.println("Enter Participant name " + j + " for team " + BLUE + teamNames.get(i-1)+RESET +" for the event : " + GREEN + eventsName.get(j-1) + RESET);
                                 String name = input.next();
                                 playerNames.add(name);
                             }
@@ -76,11 +94,18 @@ public class Main {
                                 String race = eventsName.get(j);
                                 int userRank ;
                                 do {
-                                    System.out.println("Enter rank of team "+ tn+ " on the event : "+ race);
+                                    System.out.println("Enter rank of team "+ BLUE + tn+ RESET + " on the event : "+ GREEN + race + RESET);
                                     userRank = input.nextInt();
+                                    if (userRank<1 || userRank >5){
+                                        System.out.println(RED+"Please enter between 0 to 6 😒😒"+ RESET);
+                                    }
                                 }while (userRank <1 || userRank > 5);
                                 int points = rank[userRank];
-                                System.out.println( points +" points scored for this event");
+                                if (points == 20){
+                                    System.out.println(BLUE+ points +" points scored for this event 😊"+RESET);
+                                }else {
+                                    System.out.println(CYAN + points +" points scored for this event" + RESET);
+                                }
                                 total += points;
                             }
                             teamPoints.add(total);
@@ -92,13 +117,18 @@ public class Main {
                         System.out.println("Number of Team Registered : "+ teams);
                         System.out.println("Number of Events Participated : "+ events);
                         System.out.print("Events List for Teams : ");
+
+                        System.out.print(BLUE);
                         for (int i= 0 ; i< eventsName.size() ; i++){
                             if (i== eventsName.size() -1){
                                 System.out.print(eventsName.get(i));
-                            }else {
+                            } else if (i== eventsName.size()-2) {
+                                System.out.println(eventsName.get(i));
+                            } else {
                                 System.out.print(eventsName.get(i) + "  , ");
                             }
                         }
+                        System.out.print(RESET);
 
                         System.out.println();
                         System.out.println("Score Points Won:");
@@ -114,46 +144,47 @@ public class Main {
                         }
                         System.out.println();
 
+                    //calculate the winner
+                    for (int i=0 ; i< teamPoints.size() ; i++){
+                        if (winnerPoint < teamPoints.get(i)){
+                            winnerPoint = teamPoints.get(i);
+                        }
+                    }
+                    for (int i=0 ; i<teamPoints.size() ; i++){
+                        if (winnerPoint == teamPoints.get(i)){
+                            winnerCount += 1;
+                            winnerIndex.add(i);
+                        }
+                    }
+
                         //display the result
                         System.out.println("---------------------------------------------------------");
-                        System.out.println("\t Team \t \t Participants \t \t Score");
+                        System.out.println("\t Team \t \t Participants \t\t \t Score");
                         System.out.println("---------------------------------------------------------");
 
                         for (int i=0 ; i< teams ; i++){
                             for (int j=0 ; j<events ; j++){
                                 int playerIndex = 5 * i;
                                 int teamScoreIndex = 0 + i;
-                                System.out.println("\t Team : "+teamNames.get(i) + "\t Participants : " + playerNames.get(playerIndex +j) +"\t\t Team Score " + teamPoints.get(teamScoreIndex));
+                                System.out.println(PURPLE + "\t Team : "+teamNames.get(i) + "\t Participants : " + playerNames.get(playerIndex +j) +"\t\t Team Score " + teamPoints.get(teamScoreIndex)+ RESET);
                             }
                             System.out.println("---------------------------------------------------------");
                         }
 
-                        //calculate the winner
-                        for (int i=0 ; i< teamPoints.size() ; i++){
-                            if (winnerPoint < teamPoints.get(i)){
-                                winnerPoint = teamPoints.get(i);
-                            }
-                        }
-                        for (int i=0 ; i<teamPoints.size() ; i++){
-                            if (winnerPoint == teamPoints.get(i)){
-                                winnerCount += 1;
-                                winnerIndex.add(i);
-                            }
-                        }
                         //display the winner
                         if (winnerIndex.size() == 1){
-                            System.out.println("Team "+ teamNames.get(winnerIndex.get(0)) + " has won with score " + winnerPoint);
+                            System.out.println(YELLOW + "Team "+ teamNames.get(winnerIndex.get(0)) + " has won with score " + winnerPoint + RESET + ".👍👏👏");
                         } else if (winnerIndex.size() > 1) {
                             for (int i=0 ; i<winnerIndex.size() ; i++){
                                 if (i == winnerIndex.size()-1){
-                                    System.out.print(  " and " + teamNames.get(winnerIndex.get(i)));
+                                    System.out.print(PURPLE +  " and " + teamNames.get(winnerIndex.get(i)) + RESET);
                                 }else if (i == winnerIndex.size() -2) {
-                                    System.out.print(teamNames.get(winnerIndex.get(i)));
+                                    System.out.print(GREEN + teamNames.get(winnerIndex.get(i)) + RESET);
                                 } else {
-                                    System.out.print(teamNames.get(winnerIndex.get(i)) + " , ");
+                                    System.out.print(CYAN + teamNames.get(winnerIndex.get(i)) + " , " + RESET);
                                 }
                             }
-                            System.out.print(" has won with score "+ winnerPoint);
+                            System.out.print(" has won with score "+ GREEN + winnerPoint +RESET + ".👍👏👏");
                             System.out.println();
                         } else {
                             System.out.println("Something was wrong ---------------");
@@ -168,6 +199,9 @@ public class Main {
                         do {
                             System.out.println("Enter the no of individual players Entering 5 events (max:20)");
                             players = input.nextInt();
+                            if (players<2 || players >20){
+                                System.out.println(RED+"Please enter between 2 to 20 😒😒"+ RESET);
+                            }
                         }while (players<2 || players>20);
 
                         //Events' name accept
@@ -177,7 +211,7 @@ public class Main {
                             eventsName.add(name);
                         }
 
-                        //accept player's name and ranks on each events
+                        //accept player's name and ranks on each event
                         for (int i = 1 ; i<= players ; i++ ){
                             int total = 0;
                             System.out.println("Enter the name of participant " + i);
@@ -186,12 +220,19 @@ public class Main {
                             for (int j=1 ; j<= events ; j++){
                                 int userRank ;
                                 do {
-                                    System.out.println("Enter rank of the individual : " + playerN + " on the event " + j + " : " + eventsName.get(j-1));
+                                    System.out.println("Enter rank of the individual : " + BLUE +playerN+RESET + " on the event " + j + " : " + GREEN +eventsName.get(j-1) +RESET);
                                     userRank = input.nextInt();
+                                    if (userRank<1 || userRank >5){
+                                        System.out.println(RED+"Please enter between 0 to 6 😒😒"+ RESET);
+                                    }
                                 }while (userRank <1 || userRank > 5);
                                 int points = rank[userRank];
-                                System.out.println( points +" points scored for this event");
                                 total += points;
+                                if (points == 20){
+                                    System.out.println(BLUE+ points +" points scored for this event 😊"+RESET);
+                                }else {
+                                    System.out.println(CYAN + points +" points scored for this event" + RESET);
+                                }
                             }
                             teamPoints.add(total);
                         }
@@ -202,6 +243,7 @@ public class Main {
                         System.out.println("Number of Participants : "+ players);
                         System.out.println("Number of Events : "+ events);
                         System.out.print("Events List for individuals : ");
+                        System.out.print(BLUE);
                         for (int i= 0 ; i< eventsName.size() ; i++){
                             if (i== eventsName.size() -1){
                                 System.out.print(eventsName.get(i));
@@ -209,6 +251,7 @@ public class Main {
                                 System.out.print(eventsName.get(i) + "  , ");
                             }
                         }
+                        System.out.print(RESET);
 
                         //display the score
                         System.out.println();
@@ -231,7 +274,7 @@ public class Main {
                         System.out.println("---------------------------------------------------------");
 
                         for (int i=0 ; i< players ; i++){
-                            System.out.println("Player's Name : " + playerNames.get(i) + "\t\t Score : " + teamPoints.get(i));
+                            System.out.println("Player's Name : " + GREEN +playerNames.get(i) +RESET + "\t\t Score : " + YELLOW+teamPoints.get(i)+RESET);
                             if (i == players -1){
                                 System.out.println("---------------------------------------------------------");
                             }
@@ -251,19 +294,19 @@ public class Main {
                         }
                         //display the winner
                         if (winnerIndex.size() == 1){
-                            System.out.println("Congratulations! Individual participant, "+ playerNames.get(winnerIndex.get(0)) + " has won with score " + winnerPoint);
+                            System.out.println(YELLOW + "Congratulations! Individual participant, "+ playerNames.get(winnerIndex.get(0)) + " has won with score " + winnerPoint + RESET + ".👍👏👏");
                         } else if (winnerIndex.size() > 1) {
                             System.out.print("Congratulations ! individual participants ");
                             for (int i=0 ; i<winnerIndex.size() ; i++){
                                 if (i == winnerIndex.size()-1){
-                                    System.out.print(  " and " + playerNames.get(winnerIndex.get(i)));
+                                    System.out.print( PURPLE + " and " + playerNames.get(winnerIndex.get(i))+RESET);
                                 }else if (i == winnerIndex.size()-2) {
-                                    System.out.print(playerNames.get(winnerIndex.get(i)));
+                                    System.out.print(GREEN+playerNames.get(winnerIndex.get(i))+RESET);
                                 } else {
-                                    System.out.print(playerNames.get(winnerIndex.get(i)) + " , ");
+                                    System.out.print(CYAN+playerNames.get(winnerIndex.get(i))+RESET + " , ");
                                 }
                             }
-                            System.out.print(" has won with score "+ winnerPoint);
+                            System.out.print(" has won with score "+ GREEN + winnerPoint +RESET + ".👍👏👏");
                             System.out.println();
                         } else {
                             System.out.println("Something was wrong ---------------");
@@ -279,6 +322,9 @@ public class Main {
                         do {
                             System.out.println("Enter the no of teams Entering Special event");
                             teams = input.nextInt();
+                            if (teams<2 || teams >4){
+                                System.out.println(RED+"Please enter between 0 to 5 😒😒"+ RESET);
+                            }
                         }while (teams<2 || teams>4);
 
                         //accept the event's name
@@ -292,7 +338,7 @@ public class Main {
                             String teamN = input.next();
                             teamNames.add(teamN);
                             for (int j = 1 ; j<=players; j++ ){
-                                System.out.println("Enter Participant name " + j + " for team : " + teamN);
+                                System.out.println("Enter Participant name " + j + " for team : " + GREEN + teamN + RESET);
                                 String name = input.next();
                                 playerNames.add(name);
                             }
@@ -304,10 +350,18 @@ public class Main {
                             String race = eventsName.get(0);
                             int userRank ;
                             do {
-                                System.out.println("Enter rank of team "+ tn+ " on the event : "+ race);
+                                System.out.println("Enter rank of team "+ BLUE+tn+RESET+ " on the event : "+ GREEN +race+RESET);
                                 userRank = input.nextInt();
+                                if (userRank<1 || userRank >5){
+                                    System.out.println(RED+"Please enter between 0 to 6 😒😒"+ RESET);
+                                }
                             }while (userRank <1 || userRank > 5);
                             int points = individualRank[userRank];
+                            if (points == 100){
+                                System.out.println(BLUE+ points +" points scored for this event 😊"+RESET);
+                            }else {
+                                System.out.println(CYAN + points +" points scored for this event" + RESET);
+                            }
                             System.out.println( points +" points scored for this event");
                             teamPoints.add(points);
                         }
@@ -317,7 +371,7 @@ public class Main {
                         System.out.println("--Normal Team Information--");
                         System.out.println("Number of Team Registered : "+ teams);
                         System.out.println("Number of Events Participated : "+ events);
-                        System.out.print("Events List for Teams : " +  eventsName.get(0));
+                        System.out.print("Events List for Teams : " +  BLUE + eventsName.get(0)+RESET);
 
                         System.out.println();
                         System.out.println("Score Points Won:");
@@ -338,7 +392,7 @@ public class Main {
                             for (int j=0 ; j<players ; j++){
                                 int playerIndex = 5 * i;
                                 int teamScoreIndex = 0 + i;
-                                System.out.println("\t Team : "+teamNames.get(i) + "\t Participants : " + playerNames.get(playerIndex +j) +"\t\t Team Score " + teamPoints.get(teamScoreIndex));
+                                System.out.println( YELLOW + "\t Team : "+teamNames.get(i) + "\t Participants : " + playerNames.get(playerIndex +j) +"\t\t Team Score " + teamPoints.get(teamScoreIndex)+ RESET);
                             }
                             System.out.println("---------------------------------------------------------");
                         }
@@ -357,9 +411,10 @@ public class Main {
                         }
                         //display the winner
                         if (winnerIndex.size() == 1){
-                            System.out.println("Team "+ teamNames.get(winnerIndex.get(0)) + " has won with score " + winnerPoint);
+                            System.out.println("Team "+ YELLOW+teamNames.get(winnerIndex.get(0))+RESET + " has won with score " + YELLOW+winnerPoint+RESET);
                         } else if (winnerIndex.size() > 1) {
                             for (int i=0 ; i<winnerIndex.size() ; i++){
+                                System.out.print(BLUE);
                                 if (i == winnerIndex.size()-1){
                                     System.out.print(  " and " + teamNames.get(winnerIndex.get(i)));
                                 } else if (i == winnerIndex.size() -2) {
@@ -367,11 +422,12 @@ public class Main {
                                 }else {
                                     System.out.print(teamNames.get(winnerIndex.get(i)) + " , ");
                                 }
+                                System.out.print(RESET);
                             }
-                            System.out.print(" has won with score "+ winnerPoint);
+                            System.out.print(" has won with score "+ YELLOW + winnerPoint+RESET);
                             System.out.println();
                         } else {
-                            System.out.println("Something was wrong ---------------");
+                            System.out.println(RED+"Something was wrong ---------------"+RESET);
                         }
                         System.out.println("--------------------------------------------------------");
                         System.out.println("********************************************************");
@@ -383,6 +439,9 @@ public class Main {
                         do {
                             System.out.println("Enter the no of individual players Entering 5 events (max:20)");
                             players = input.nextInt();
+                            if (players<2 || players >20){
+                                System.out.println(RED+"Please enter between 2 to 20 😒😒"+ RESET);
+                            }
                         }while (players<2 || players>20);
 
                         //Events' name accept
@@ -397,11 +456,18 @@ public class Main {
                             playerNames.add(playerN);
                             int userRank ;
                             do {
-                                System.out.println("Enter rank of the individual : " + playerN + " on the event : " + eventsName.get(0));
+                                System.out.println("Enter rank of the individual : " + BLUE +playerN+RESET + " on the event : " + GREEN+eventsName.get(0)+RESET);
                                 userRank = input.nextInt();
+                                if (userRank<1 || userRank >5){
+                                    System.out.println(RED+"Please enter between 0 to 6 😒😒"+ RESET);
+                                }
                             }while (userRank <1 || userRank > 5);
                             int points = individualRank[userRank];
-                            System.out.println( points +" points scored for this event");
+                            if (points == 100){
+                                System.out.println(BLUE+ points +" points scored for this event 😊"+RESET);
+                            }else {
+                                System.out.println(CYAN + points +" points scored for this event" + RESET);
+                            }
                             teamPoints.add(points);
                         }
 
@@ -410,7 +476,7 @@ public class Main {
                         System.out.println("--Normal Team Information--");
                         System.out.println("Number of Participants : "+ players);
                         System.out.println("Number of Events : "+ events);
-                        System.out.print("Events List for individuals : " + eventsName.get(0));
+                        System.out.print("Events List for individuals : " + BLUE +eventsName.get(0)+RESET);
 
                         System.out.println();
                         System.out.println("Score Points Won:");
@@ -432,7 +498,7 @@ public class Main {
                         System.out.println("---------------------------------------------------------");
 
                         for (int i=0 ; i< players ; i++){
-                            System.out.println("Player's Name : " + playerNames.get(i) + "\t\t Score : " + teamPoints.get(i));
+                            System.out.println("Player's Name : " + BLUE+playerNames.get(i)+RESET + "\t\t Score : " + GREEN+teamPoints.get(i)+RESET);
                             if (i == players -1){
                                 System.out.println("---------------------------------------------------------");
                             }
@@ -451,10 +517,11 @@ public class Main {
                             }
                         }
                         if (winnerIndex.size() == 1){
-                            System.out.println("Congratulations! Individual participant, "+ playerNames.get(winnerIndex.get(0)) + " has won with score " + winnerPoint);
+                            System.out.println("Congratulations! Individual participant, "+ GREEN+playerNames.get(winnerIndex.get(0))+RESET + " has won with score " + YELLOW+winnerPoint+RESET);
                         } else if (winnerIndex.size() > 1) {
                             System.out.print("Congratulations ! individual participants ");
                             for (int i=0 ; i<winnerIndex.size() ; i++){
+                                System.out.print(YELLOW);
                                 if (i == winnerIndex.size()-1){
                                     System.out.print(  " and " + playerNames.get(winnerIndex.get(i)));
                                 }else if (i == winnerIndex.size()-2) {
@@ -462,8 +529,9 @@ public class Main {
                                 } else {
                                     System.out.print(playerNames.get(winnerIndex.get(i)) + " , ");
                                 }
+                                System.out.print(RESET);
                             }
-                            System.out.print(" has won with score "+ winnerPoint);
+                            System.out.print(" has won with score "+ YELLOW + winnerPoint+ RESET);
                             System.out.println();
                         } else {
                             System.out.println("Something was wrong ---------------");
@@ -473,16 +541,312 @@ public class Main {
                         System.out.println("********************************************************");
 
                     break;
+                case 5:
+                    int userSelectNo=0;
+                    //accept what user want to play
+                    do {
+                        Custom();
+                        userSelectNo= input.nextInt();
+                        if (userSelectNo<=0 || userSelectNo>=3){
+                            System.out.println(RED+"Please enter between 0 to 3 😒😒"+ RESET);
+                        }
+                    }while (userSelectNo<=0 || userSelectNo>=3);
+                    //do the process using switch case;
+                    switch (userSelectNo){
+                        case 1:// team custom events
+                            //accept event number
+                           do {
+                               System.out.println("Enter the no: of events you want to play min:1");
+                               events = input.nextInt();
+                               if (events <1){
+                                   System.out.println(RED+"Please enter 1 or more 😒😒"+ RESET);
+                               }
+                           }while (events<1);
+
+                           //accept event name
+                            for (int i=1; i<=events ; i++){
+                                System.out.println("Enter the event name " + i);
+                                String eName = input.next();
+                                eventsName.add(eName);
+                            }
+                            //accept team number
+                            do {
+                                System.out.println("Enter the no: of teams");
+                                teams = input.nextInt();
+                                if(teams<2){
+                                    System.out.println(RED+"You can't play . Please enter 2 or above  😒😒"+ RESET);
+                                }
+                            }while (teams<2);
+
+                            //accept team name;
+                            for (int i=1; i<=teams ;i++){
+                                System.out.println("Enter the name for team "+ i);
+                                String teamN = input.next();
+                                teamNames.add(teamN);
+                            }
+                            //accept the member of a team
+                            do {
+                                System.out.println("Enter the no: of players in a team"+RED+" (min:5) "+RESET);
+                                players = input.nextInt();
+                                if(players<2){
+                                    System.out.println(RED+"You can't play . Please enter 5 or above  😒😒"+ RESET);
+                                }
+                            }while (players<5);
+
+                            //accept the member's name
+                            for (int i=0; i<teams ;i++){
+                                for (int j=0;j<players ; j++){
+                                    System.out.println("Enter the player's name " + (j+1)+" of team "+ BLUE+ teamNames.get(i)+RESET);
+                                    String pName = input.next();
+                                    playerNames.add(pName);
+                                }
+                            }
+                            //accept team rank
+                            for (int i=0 ; i<teams ; i++){
+                                int total = 0;
+                                for (int j=0 ; j<events ;j++){
+                                    int userRank;
+                                    do {
+                                        System.out.println("Enter the rank of team " + BLUE +teamNames.get(i)+RESET + " in the event : "  +BLUE + eventsName.get(j) + RESET);
+                                        userRank = input.nextInt();
+                                        if (userRank<1 || userRank >5){
+                                            System.out.println(RED+"Please enter between 0 to 6 😒😒"+ RESET);
+                                        }
+                                    }while (userRank < 1 || userRank >5);
+                                    int points = rank[userRank];
+                                    total += points;
+                                    if (points == 20){
+                                        System.out.println(BLUE+ points +" points scored for this event 😊"+RESET);
+                                    }else {
+                                        System.out.println(CYAN + points +" points scored for this event" + RESET);
+                                    }
+                                }
+                                teamPoints.add(total);
+                            }
+                            //Display event details
+                            System.out.println("This team will not be scored any points");
+                            System.out.println("--Normal Team Information--");
+                            System.out.println("Number of Team Registered : "+ teams);
+                            System.out.println("Number of Events Participated : "+ events);
+                            System.out.print("Events List for Teams : ");
+
+                            System.out.print(BLUE);
+                            for (int i= 0 ; i< eventsName.size() ; i++){
+                                if (i== eventsName.size() -1){
+                                    System.out.print(eventsName.get(i));
+                                } else if (i== eventsName.size()-2) {
+                                    System.out.println(eventsName.get(i));
+                                } else {
+                                    System.out.print(eventsName.get(i) + "  , ");
+                                }
+                            }
+                            System.out.print(RESET);
+
+                            System.out.println();
+                            System.out.println("Score Points Won:");
+                            System.out.println("------------------");
+                            System.out.printf("\n \n");
+                            System.out.print("All Teams Scores : " );
+                            for (int i= 0 ; i< teamPoints.size() ; i++){
+                                if (i== teamPoints.size() - 1){
+                                    System.out.print(teamPoints.get(i));
+                                }else {
+                                    System.out.print(teamPoints.get(i) + " , ");
+                                }
+                            }
+                            System.out.println();
+
+                            //calculate the winner
+                            for (int i=0 ; i< teamPoints.size() ; i++){
+                                if (winnerPoint < teamPoints.get(i)){
+                                    winnerPoint = teamPoints.get(i);
+                                }
+                            }
+                            for (int i=0 ; i<teamPoints.size() ; i++){
+                                if (winnerPoint == teamPoints.get(i)){
+                                    winnerCount += 1;
+                                    winnerIndex.add(i);
+                                }
+                            }
+                            //display the result
+                            System.out.println("---------------------------------------------------------");
+                            System.out.println("\t Team \t \t Participants \t\t \t Score");
+                            System.out.println("---------------------------------------------------------");
+
+                            for (int i=0 ; i< teams ; i++){
+                                for (int j=0 ; j<events ; j++){
+                                    int playerIndex = 5 * i;
+                                    int teamScoreIndex = 0 + i;
+                                    System.out.println(PURPLE + "\t Team : "+teamNames.get(i) + "\t Participants : " + playerNames.get(playerIndex +j) +"\t\t Team Score " + teamPoints.get(teamScoreIndex)+ RESET);
+                                }
+                                System.out.println("---------------------------------------------------------");
+                            }
+                            //display the winner
+                            if (winnerIndex.size() == 1){
+                                System.out.println(YELLOW + "Team "+ teamNames.get(winnerIndex.get(0)) + " has won with score " + winnerPoint + RESET + ".👍👏👏");
+                            } else if (winnerIndex.size() > 1) {
+                                for (int i=0 ; i<winnerIndex.size() ; i++){
+                                    if (i == winnerIndex.size()-1){
+                                        System.out.print(PURPLE +  " and " + teamNames.get(winnerIndex.get(i)) + RESET);
+                                    }else if (i == winnerIndex.size() -2) {
+                                        System.out.print(GREEN + teamNames.get(winnerIndex.get(i)) + RESET);
+                                    } else {
+                                        System.out.print(CYAN + teamNames.get(winnerIndex.get(i)) + " , " + RESET);
+                                    }
+                                }
+                                System.out.print(" has won with score "+ GREEN + winnerPoint +RESET + ".👍👏👏");
+                                System.out.println();
+                            } else {
+                                System.out.println("Something was wrong ---------------");
+                            }
+                            System.out.println("--------------------------------------------------------");
+                            System.out.println("********************************************************");
+                            break;
+                        case 2:// individual custom events
+                            //accept event number
+                            do {
+                                System.out.println("Enter the no: of events you want to play min:1");
+                                events = input.nextInt();
+                                if (events <1){
+                                    System.out.println(RED+"Please enter 1 or more 😒😒"+ RESET);
+                                }
+                            }while (events<1);
+
+                            //accept event name
+                            for (int i=1; i<=events ; i++){
+                                System.out.println("Enter the event name " + i);
+                                String eName = input.next();
+                                eventsName.add(eName);
+                            }
+                            //accept number of player
+                            do {
+                                System.out.println("Enter the no: of player");
+                                players = input.nextInt();
+                                if(players<2){
+                                    System.out.println(RED+"You can't play . Please enter 2 or above  😒😒"+ RESET);
+                                }
+                            }while (players<2);
+
+                            //accept player name;
+                            for (int i=1; i<=players ;i++){
+                                System.out.println("Enter the name for team "+ i);
+                                String playerN = input.next();
+                                playerNames.add(playerN);
+                            }
+                            //accept team rank
+                            for (int i=0 ; i<players ; i++){
+                                int total = 0;
+                                for (int j=0 ; j<events ;j++){
+                                    int userRank;
+                                    do {
+                                        System.out.println("Enter the rank of team " + BLUE +playerNames.get(i)+RESET + " in the event : "  +BLUE + eventsName.get(j) + RESET);
+                                        userRank = input.nextInt();
+                                        if (userRank<1 || userRank >5){
+                                            System.out.println(RED+"Please enter between 0 to 6 😒😒"+ RESET);
+                                        }
+                                    }while (userRank < 1 || userRank >5);
+                                    int points = rank[userRank];
+                                    total += points;
+                                    if (points == 20){
+                                        System.out.println(BLUE+ points +" points scored for this event 😊"+RESET);
+                                    }else {
+                                        System.out.println(CYAN + points +" points scored for this event" + RESET);
+                                    }
+                                }
+                                teamPoints.add(total);
+                            }
+                            //Display event details
+                            System.out.println("This team will not be scored any points");
+                            System.out.println("--Normal Team Information--");
+                            System.out.println("Number of participant Registered : "+ players);
+                            System.out.println("Number of Events Participated : "+ events);
+                            System.out.print("Events List for Teams : ");
+
+                            System.out.print(BLUE);
+                            for (int i= 0 ; i< eventsName.size() ; i++){
+                                if (i== eventsName.size() -1){
+                                    System.out.print(eventsName.get(i));
+                                } else if (i== eventsName.size()-2) {
+                                    System.out.println(eventsName.get(i));
+                                } else {
+                                    System.out.print(eventsName.get(i) + "  , ");
+                                }
+                            }
+                            System.out.print(RESET);
+
+                            System.out.println();
+                            System.out.println("Score Points Won:");
+                            System.out.println("------------------");
+                            System.out.printf("\n \n");
+                            System.out.print("All Teams Scores : " );
+                            for (int i= 0 ; i< teamPoints.size() ; i++){
+                                if (i== teamPoints.size() - 1){
+                                    System.out.print(teamPoints.get(i));
+                                }else {
+                                    System.out.print(teamPoints.get(i) + " , ");
+                                }
+                            }
+                            System.out.println();
+
+                            //calculate the winner
+                            for (int i=0 ; i< teamPoints.size() ; i++){
+                                if (winnerPoint < teamPoints.get(i)){
+                                    winnerPoint = teamPoints.get(i);
+                                }
+                            }
+                            for (int i=0 ; i<teamPoints.size() ; i++){
+                                if (winnerPoint == teamPoints.get(i)){
+                                    winnerCount += 1;
+                                    winnerIndex.add(i);
+                                }
+                            }
+
+                            //display the result
+                            System.out.println("---------------------------------------------------------");
+                            System.out.println(" \t Participant's name \t \t Score");
+                            System.out.println("---------------------------------------------------------");
+
+                            for (int i=0 ; i< players ; i++){
+                                System.out.println("Player's Name : " + GREEN +playerNames.get(i) +RESET + "\t\t Score : " + YELLOW+teamPoints.get(i)+RESET);
+                                if (i == players -1){
+                                    System.out.println("---------------------------------------------------------");
+                                }
+                            }
+                            //display the winner
+                            if (winnerIndex.size() == 1){
+                                System.out.println(YELLOW + "Congratulations! Individual participant, "+ playerNames.get(winnerIndex.get(0)) + " has won with score " + winnerPoint + RESET + ".👍👏👏");
+                            } else if (winnerIndex.size() > 1) {
+                                System.out.print("Congratulations ! individual participants ");
+                                for (int i=0 ; i<winnerIndex.size() ; i++){
+                                    if (i == winnerIndex.size()-1){
+                                        System.out.print( PURPLE + " and " + playerNames.get(winnerIndex.get(i))+RESET);
+                                    }else if (i == winnerIndex.size()-2) {
+                                        System.out.print(GREEN+playerNames.get(winnerIndex.get(i))+RESET);
+                                    } else {
+                                        System.out.print(CYAN+playerNames.get(winnerIndex.get(i))+RESET + " , ");
+                                    }
+                                }
+                                System.out.print(" has won with score "+ GREEN + winnerPoint +RESET + ".👍👏👏");
+                                System.out.println();
+                            } else {
+                                System.out.println("Something was wrong ---------------");
+                            }
+
+                            System.out.println("--------------------------------------------------------");
+                            System.out.println("********************************************************");
+                            break;
+                    }
+                    break;
             }
             //Ask the user , he wants to play again or not;
             //if user want to play , clear all the array list.
             //do this process again
-            System.out.println("Do you want to play again? (y/n)");
+            System.out.println(GREEN+"Do you want to play again?"+BLUE+"y" +WHITE+"/"+RED+"n"+RESET);
             String yesOrNo = input.next();
             yesOrNo.toLowerCase();
             if (yesOrNo.equals("n")){
                 keepPlay = false;
-                System.out.println("Thanks for using our Tournament Scoring System");
+                System.out.println(BLUE + "Thanks for using our Tournament Scoring System" + RESET+ ".🙏🙏");
             }else {
                 keepPlay = true;
                 eventsName.clear();
@@ -506,9 +870,16 @@ public class Main {
     public static void menu(){
         System.out.println("******** MENU ************");
         System.out.println("Please Enter the following:");
-        System.out.println("1 for Normal Teams //5 events ");
-        System.out.println("2 for Normal Individual //5 events ");
-        System.out.println("3 for Special Teams // 1event ");
-        System.out.println("4 for Special Individual // 1 event ");
+        System.out.println(BLUE + "1"+ RESET+" for Normal Teams //5 events ");
+        System.out.println(BLUE + "2"+ RESET+" for Normal Individual //5 events ");
+        System.out.println(BLUE + "3"+ RESET+" for Special Teams // 1event ");
+        System.out.println(BLUE + "4"+ RESET+" for Special Individual // 1 event ");
+        System.out.println(BLUE + "5"+ RESET+" Custom events : "+YELLOW +"(user can do whatever he want)" + RESET);
+    }
+    public static void Custom(){
+        System.out.println("******** MENU ************");
+        System.out.println("Please Enter the following:");
+        System.out.println(BLUE + "1"+ RESET+" for Teams");
+        System.out.println(BLUE + "2"+ RESET+" for Individual");
     }
 }
