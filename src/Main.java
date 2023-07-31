@@ -49,7 +49,12 @@ public class Main {
             do {
                 //display menu and accept the one that user want to use
                 menu();
+                //request the menu
                 userChooseMenu = input.nextInt();
+
+                //user entered number must be between 0 and 6
+                //if user entered incorrect number , we will display the warning with red color.
+                //and request again....
                 if (userChooseMenu<=0 || userChooseMenu >=6){
                     System.out.println(RED+"Please select one from our lists 😒😒"+ RESET);
                 }
@@ -166,7 +171,7 @@ public class Main {
                         for (int j=0 ; j<events ; j++){
                             int playerIndex = 5 * i;
                             int teamScoreIndex = 0 + i;
-                            System.out.println(PURPLE + "\t Team : "+teamNames.get(i) + "\t Participants : " + playerNames.get(playerIndex +j) +"\t\t Team Score " + teamPoints.get(teamScoreIndex)+ RESET);
+                            System.out.println(YELLOW + "\t Team : "+teamNames.get(i) + "\t Participants : " + playerNames.get(playerIndex +j) +"\t\t Team Score " + teamPoints.get(teamScoreIndex)+ RESET);
                         }
                         System.out.println("---------------------------------------------------------");
                     }
